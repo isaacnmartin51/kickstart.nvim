@@ -767,6 +767,7 @@ require('lazy').setup({
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
+        terraform = { 'terraform_fmt' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
@@ -880,20 +881,20 @@ require('lazy').setup({
     -- change the command in the config to whatever the name of that colorscheme is.
     --
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-    'folke/tokyonight.nvim',
+    'rebelot/kanagawa.nvim',
     priority = 1000, -- Make sure to load this before all the other start plugins.
     config = function()
-      ---@diagnostic disable-next-line: missing-fields
-      require('tokyonight').setup {
-        styles = {
-          comments = { italic = false }, -- Disable italics in comments
-        },
-      }
+      --@diagnostic disable-next-line: missing-fields
+      --require('').setup {
+      -- styles = {
+      --  comments = { italic = false }, -- Disable italics in comments
+      --},
+      -- }
 
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-night'
+      vim.cmd.colorscheme 'kanagawa'
     end,
   },
 
@@ -943,7 +944,22 @@ require('lazy').setup({
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
+      ensure_installed = {
+        'bash',
+        'c',
+        'diff',
+        'html',
+        'lua',
+        'luadoc',
+        'markdown',
+        'markdown_inline',
+        'query',
+        'vim',
+        'vimdoc',
+        'hcl',
+        'terraform',
+        'typescript',
+      },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
@@ -961,6 +977,35 @@ require('lazy').setup({
     --    - Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
     --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
     --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
+  },
+
+  {
+    'OXY2DEV/markview.nvim',
+    lazy = false,
+
+    -- For `nvim-treesitter` users.
+    priority = 49,
+
+    -- For blink.cmp's completion
+    -- source
+    --:
+    dependencies = {
+      'saghen/blink.cmp',
+    },
+  },
+  {
+    'github/copilot.vim',
+    lazy = true,
+    event = 'InsertEnter',
+    config = function()
+      vim.g.copilot_no_tab_map = true
+      vim.g.copilot_assume_mapped = true
+      vim.api.nvim_set_keymap('i', '<C-j>', 'copilot#Accept("<CR>")', {
+        silent = true,
+        expr = true,
+      })
+      vim.g.copilot_workspace_fallback_path = vim.fn.getcwd()
+    end,
   },
 
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
